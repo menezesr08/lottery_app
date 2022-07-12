@@ -1,6 +1,6 @@
 # Decentralized Lottery App
 
-A simple decentralized lottery app demonstration. 
+A simple decentralized lottery app demonstration using Flutter + Web3
 
 Particpate by sending 0.1 eth to the contract and once 3 participants or more have placed their bids, then the owner/manager of the lottery can assign a winner and send the total prize amount to the winner.
 
