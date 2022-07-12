@@ -1,16 +1,25 @@
-# lottery_app
+# Decentralized Lottery App
 
-A new Flutter project.
+A simple decentralized lottery app demonstration. 
 
-## Getting Started
+Particpate by sending 0.1 eth to the contract and once 3 participants or more have placed their bids, then the owner/manager of the lottery can assign a winner and send the total prize amount to the winner.
 
-This project is a starting point for a Flutter application.
+# Features
 
-A few resources to get you started if this is your first Flutter project:
+- Connect to Metamask with Flutter
+- Use different metamask accounts to interact with the lottery app
+- Send eth to the smart contract via transactions
+- Call smart contract functions with Flutter and receive data
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# Step by step demonstration: 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1) Connect to metamask.
+2) Manager (aka person who deployed the contract) can send eth to participate in the lottery.
+3) 3 other accounts will also send eth to participate in the lottery.
+4) Manager can check the total balance (prize pool) and the randomly pick a winner
+5) Smart contract sends the prize to the winner.
+
+# Video demonstration: 
+https://streamable.com/hp7c2h
+
+### The smart contract was inspired by the course: https://www.udemy.com/course/master-ethereum-and-solidity-programming-with-real-world-apps
