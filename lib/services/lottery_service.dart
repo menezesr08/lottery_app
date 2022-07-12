@@ -54,7 +54,8 @@ class LotteryService extends ChangeNotifier {
         ],
       ),
     );
-    // Subscribe to events
+
+  
     connector.on('connect', (session) {
       logger.d('Connecting to WalletConnect bridge. Session details are: ');
       logger.d(session);
@@ -84,7 +85,6 @@ class LotteryService extends ChangeNotifier {
     }
 
     connected = true;
-    print(connected);
     account = session!.accounts[0];
 
     EthereumWalletConnectProvider provider =
@@ -95,6 +95,7 @@ class LotteryService extends ChangeNotifier {
 
   Future<String> sendEtherToContract() async {
     WalletConnectEthereumCredentials credentials = this.credentials;
+    
     Transaction transaction = Transaction(
       from: EthereumAddress.fromHex(account),
       to: EthereumAddress.fromHex(lotteryContractAddress),
@@ -102,8 +103,10 @@ class LotteryService extends ChangeNotifier {
       value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000000),
       maxGas: null,
     );
+    
     logger.d('Sending transaction...');
     _openMetamask();
+    
     String result;
     try {
       result = await client.sendTransaction(
@@ -113,7 +116,7 @@ class LotteryService extends ChangeNotifier {
         chainId: 42,
       );
       result = 'tx: $result';
-      logger.d('send ether to contract hash is: ' + result);
+      logger.d('send ether to contract hash is: $result');
     } catch (e) {
       logger.e('Transaction Failed. Message is: ${e.toString()}');
       result = e.toString();
@@ -126,6 +129,7 @@ class LotteryService extends ChangeNotifier {
     WalletConnectEthereumCredentials credentials = this.credentials;
     final ethFunction = contract.function(functionName);
     // don't need to send a value because we are just calling functions
+    
     Transaction transaction = Transaction.callContract(
       from: EthereumAddress.fromHex(account),
       function: ethFunction,
@@ -135,8 +139,10 @@ class LotteryService extends ChangeNotifier {
       value: null,
       maxGas: null,
     );
+    
     logger.d('Sending transaction...');
     _openMetamask();
+    
     String result;
     try {
      result = await client.sendTransaction(
@@ -146,13 +152,11 @@ class LotteryService extends ChangeNotifier {
       chainId: 42,
     );
       result = 'tx: $result';
-      logger.d('Sent transaction with tx: ' + result);
+      logger.d('Sent transaction with tx: $result');
     } catch (e) {
       logger.e('Transaction Failed. Message is: ${e.toString()}');
       result = e.toString();
     }
-
-
 
     logger.d('Send prize transaction hash is: $result');
     return result;
@@ -176,11 +180,9 @@ class LotteryService extends ChangeNotifier {
     notifyListeners();
   }
 
-  // issue with this function is how to find out when the error is being caused
-  // perhaps move the callfunction to main.dart
   Future<void> pickWinner() async {
     await sendTransactionToFunction('pickWinner');
-    Future.delayed(Duration(seconds: 10), () async {
+    Future.delayed(const Duration(seconds: 10), () async {
       List<dynamic> res = await callFunction('winner');
       winner = res[0].toString();
       notifyListeners();
@@ -195,7 +197,6 @@ class LotteryService extends ChangeNotifier {
   }
 
   void _openMetamask() async {
-    const url = 'io.metamask';
     logger.d('Opening metamask...');
     await launchUrl(Uri.parse(sessionUrl!));
   }
