@@ -67,7 +67,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Text(
                       truncateEthAddress(lotteryService.account),
-                      style: const TextStyle(fontSize: 20, color: Colors.blueAccent),
+                      style: const TextStyle(
+                          fontSize: 20, color: Colors.blueAccent),
                     ),
                   ],
                 ),
@@ -79,19 +80,19 @@ class _HomePageState extends State<HomePage> {
                 onPressed: lotteryService.account.isEmpty
                     ? null
                     : () async {
-                        String result = await lotteryService.sendEtherToContract();
+                        String result =
+                            await lotteryService.sendEtherToContract();
                         await showDialog<String>(
                             context: context,
                             builder: (BuildContext context) {
-                              return CustomDialog('Transaction output', 
-                              result
-                              );
+                              return CustomDialog('Transaction output', result);
                             });
                       },
                 child: const Text("Send 0.001 Ether"),
               ),
               ElevatedButton(
-                onPressed: lotteryService.account != managerPublicKey
+                onPressed: lotteryService.account.toUpperCase() !=
+                        managerPublicKey.toUpperCase()
                     ? null
                     : () async {
                         await lotteryService.getBalance();
@@ -105,7 +106,8 @@ class _HomePageState extends State<HomePage> {
                 child: const Text("Get Balance"),
               ),
               ElevatedButton(
-                onPressed: lotteryService.account != managerPublicKey
+                onPressed: lotteryService.account.toUpperCase() !=
+                        managerPublicKey.toUpperCase()
                     ? null
                     : () async {
                         await lotteryService.pickWinner();
@@ -121,18 +123,16 @@ class _HomePageState extends State<HomePage> {
               ),
               ElevatedButton(
                 onPressed: lotteryService.winner.isEmpty ||
-                        lotteryService.account != managerPublicKey
+                        lotteryService.account.toUpperCase() !=
+                            managerPublicKey.toUpperCase()
                     ? null
                     : () async {
                         String result = await lotteryService.callSendPrize();
                         await showDialog<String>(
                             context: context,
                             builder: (BuildContext context) {
-                              return CustomDialog(
-                                  'Transaction output',
-                                  result);
+                              return CustomDialog('Transaction output', result);
                             });
-                           
                       },
                 child: const Text("Send Prize"),
               ),
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    'Balance: ${lotteryService.balance}',
+                    'Balance: ${lotteryService.balance} ETH',
                     style: const TextStyle(
                         fontSize: 30,
                         color: Colors.green,

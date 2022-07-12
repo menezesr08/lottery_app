@@ -55,7 +55,6 @@ class LotteryService extends ChangeNotifier {
       ),
     );
 
-  
     connector.on('connect', (session) {
       logger.d('Connecting to WalletConnect bridge. Session details are: ');
       logger.d(session);
@@ -95,18 +94,18 @@ class LotteryService extends ChangeNotifier {
 
   Future<String> sendEtherToContract() async {
     WalletConnectEthereumCredentials credentials = this.credentials;
-    
+
     Transaction transaction = Transaction(
       from: EthereumAddress.fromHex(account),
       to: EthereumAddress.fromHex(lotteryContractAddress),
       gasPrice: await client.getGasPrice(),
-      value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000000),
+      value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 100000000),
       maxGas: null,
     );
-    
+
     logger.d('Sending transaction...');
     _openMetamask();
-    
+
     String result;
     try {
       result = await client.sendTransaction(
@@ -129,7 +128,7 @@ class LotteryService extends ChangeNotifier {
     WalletConnectEthereumCredentials credentials = this.credentials;
     final ethFunction = contract.function(functionName);
     // don't need to send a value because we are just calling functions
-    
+
     Transaction transaction = Transaction.callContract(
       from: EthereumAddress.fromHex(account),
       function: ethFunction,
@@ -139,18 +138,18 @@ class LotteryService extends ChangeNotifier {
       value: null,
       maxGas: null,
     );
-    
+
     logger.d('Sending transaction...');
     _openMetamask();
-    
+
     String result;
     try {
-     result = await client.sendTransaction(
-      credentials,
-      transaction,
-      fetchChainIdFromNetworkId: false,
-      chainId: 42,
-    );
+      result = await client.sendTransaction(
+        credentials,
+        transaction,
+        fetchChainIdFromNetworkId: false,
+        chainId: 42,
+      );
       result = 'tx: $result';
       logger.d('Sent transaction with tx: $result');
     } catch (e) {
@@ -176,24 +175,38 @@ class LotteryService extends ChangeNotifier {
   Future<void> getBalance() async {
     List<dynamic> res = await callFunction('getBalance');
     logger.d('The balance is: ${res[0].toString()}');
-    balance = res[0].toString();
+
+    balance = convertGweiToEth(res[0].toString());
     notifyListeners();
+  }
+
+  String convertGweiToEth(String amount) {
+    print(amount);
+    return EtherAmount.fromUnitAndValue(EtherUnit.wei, amount)
+        .getValueInUnit(EtherUnit.ether)
+        .toString();
   }
 
   Future<void> pickWinner() async {
     await sendTransactionToFunction('pickWinner');
     Future.delayed(const Duration(seconds: 10), () async {
-      List<dynamic> res = await callFunction('winner');
-      winner = res[0].toString();
-      notifyListeners();
+      await getWinner();
     });
   }
 
   Future<String> callSendPrize() async {
     String res = await sendTransactionToFunction('sendPrize');
     logger.d('callSendPrize result is: $res');
-
+    Future.delayed(const Duration(seconds: 6), () async {
+      await getWinner();
+    });
     return res;
+  }
+
+  Future<void> getWinner() async {
+    List<dynamic> res = await callFunction('winner');
+    winner = res[0].toString();
+    notifyListeners();
   }
 
   void _openMetamask() async {

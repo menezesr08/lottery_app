@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/utils/constants.dart';
-import 'package:lottery_app/widgets/dialog.dart';
+import 'package:lottery_app/widgets/home_page.dart';
 import 'package:provider/provider.dart';
-import 'utils/helper.dart';
 import 'services/lottery_service.dart';
 
 void main() {
