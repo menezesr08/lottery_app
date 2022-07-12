@@ -27,24 +27,24 @@ class _HomePageState extends State<HomePage> {
         children: [
           // Connect Button
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary:
-                        !lotteryService.connected ? Colors.red : Colors.green),
-                onPressed: () async {
-                  await lotteryService.walletConnect();
-                  await showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CustomDialog('Connection attempt',
-                            'Metamask wallet connection: ${lotteryService.connected}');
-                      });
-                },
-                child: const Text(
-                  'Connect',
-                  style: TextStyle(fontSize: 25, color: Colors.black),
+              TextButton(
+                  onPressed: () async {
+                    await lotteryService.walletConnect();
+                    await showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialog('Connection attempt',
+                              'Metamask wallet connection: ${lotteryService.connected}');
+                        });
+                  },
+                  child: const Text('Connect')),
+              Container(
+                color: !lotteryService.connected ? Colors.red : Colors.green,
+                child: Text(
+                  !lotteryService.connected ? 'Disconnected' : 'Connected',
+                  style: const TextStyle(fontSize: 25, color: Colors.black),
                 ),
               ),
             ],
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                               return CustomDialog('Transaction output', result);
                             });
                       },
-                child: const Text("Send 0.001 Ether"),
+                child: const Text("Send 0.1 Ether"),
               ),
               ElevatedButton(
                 onPressed: lotteryService.account.toUpperCase() !=
