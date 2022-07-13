@@ -181,7 +181,6 @@ class LotteryService extends ChangeNotifier {
   }
 
   String convertGweiToEth(String amount) {
-    print(amount);
     return EtherAmount.fromUnitAndValue(EtherUnit.wei, amount)
         .getValueInUnit(EtherUnit.ether)
         .toString();

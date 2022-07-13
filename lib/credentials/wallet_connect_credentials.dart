@@ -11,7 +11,6 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
 
   @override
   Future<EthereumAddress> extractAddress() {
-    // TODO: implement extractAddress
     throw UnimplementedError();
   }
 
